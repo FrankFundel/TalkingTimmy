@@ -38,19 +38,20 @@ def program():
   global text
   global file
   
-  browser = [
+  layout = [
+    [sg.Radio("Text", "Radio", True, key="-TEXT-RADIO-")],
+    [sg.In(key="-TEXT-")],
+    [sg.Radio("WAV file (16 Bit, 8000Hz)", "Radio", False, key="-FILE-RADIO-")],
     [
-      sg.Radio("Text", "Radio", True, key="-TEXT-RADIO-"),
-      sg.In(size=(35, 1), key="-TEXT-"),
-    ],
-    [
-      sg.Radio("WAV file (16 Bit, 8000Hz)", "Radio", False, key="-FILE-RADIO-"),
-      sg.In(size=(25, 1), enable_events=True, key="-FILE-"),
+      sg.In(enable_events=True, key="-FILE-"),
       sg.FileBrowse(),
     ],
+    [
+      sg.Radio("AI", "Radio2", True, key="-AI-"),
+      sg.Radio("Rule based", "Radio2", False, key="-RULE-")
+    ],
+    [sg.Button("Talk")]
   ]
-
-  layout = [browser, [sg.Button("Talk")]]
 
   window = sg.Window("Demo", layout)
 
