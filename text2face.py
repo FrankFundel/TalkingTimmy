@@ -60,7 +60,7 @@ def text2face(text):
     print(path, sr, len(out))
     return out[:-1] # last one is not full
 
-  model = tf.keras.models.load_model('C:\\Users\\frank\\Desktop\\Uni\\HiWi\\speech2face_cnn')
+  model = tf.keras.models.load_model('AI\\speech2face_cnn')
 
   audio = getAudio(filepath, step=audio_sample_size)
   input = np.asarray(audio)
@@ -138,6 +138,7 @@ def worker():
       face_enc = mat2string(face)
       audio_enc = readfile(audio)
 
+      print("Sending face and audio data...")
       sio.emit('face', face_enc)
       sio.emit('audio', audio_enc)
       text = ""
