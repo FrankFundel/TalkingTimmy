@@ -12,7 +12,7 @@
 
 [4. The Training](#_Toc79967242)
 
-[5. Application 11](#_Toc79967247)
+[5. Application](#_Toc79967247)
 
 ## 1. The Idea
 
@@ -135,7 +135,7 @@ Next I copied the CSV to Animation Script and modified it to read .WAV files and
 
 Next was the last problem: display the animation on the Holofil. Luckily there is an App for the Holofil that can display 3D-Files. But when I export them from Blender they don&#39;t work, I spent days trying to resolve this problem efficiently but could not find a solution. So next best thing would be: Live stream it from the PC to the Holofil using TeamViewer or using a secondary display via HDMI. Or you could render the animation and play it but that would take too long.
 
-S ![](RackMultipart20210824-4-10gbpbr_html_645d1757cc70a823.gif) o I figured out we have to make a custom Unity App for Android, because the Holofil App cannot play sound and rendering takes too long and is not movable in 3D space. I could easily set up a Unity App on android and import the Blender model with all its BlendShapes.
+So I figured out we have to make a custom Unity App for Android, because the Holofil App cannot play sound and rendering takes too long and is not movable in 3D space. I could easily set up a Unity App on android and import the Blender model with all its BlendShapes.
 
 Now all that is needed is a Script that converts the neural network output into an animation. Luckily I found exactly that on the internet. Now you can enter text, it gets sent to a server which runs it through text-to-speech, prepares it and then runs it through the neural network to send back the keyframe data and the audio.
 
