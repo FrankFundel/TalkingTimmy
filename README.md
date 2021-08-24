@@ -1,6 +1,17 @@
-
 # TalkingTimmy
+
 ## HiWi Project – Frank Fundel
+
+## How to use
+
+1. Create new Unity project and add avatar of choice that has ARKit BlendShapes
+2. Make sure it has SkinnedMeshRenderer, Animation and Audio Source
+3. Add the `animate.cs` script to it (needs SocketIO and OpenWaveParser)
+4. Run the server using `python text2face.py`
+5. Create tunnel using `ngrok http 8080`
+6. Put tunnel url into `animate.cs`
+7. Build and run unity android app
+8. Type into command line and press enter
 
 ## Content
 
@@ -50,7 +61,7 @@ Perfect. So now we can gather some training data.
 
 I was reading hours stories and wikipedia articles out loud into the front camera of my phone using the Live Link Face App from Unreal Engine which records sound and facial data. After preparing (24 FPS and magic) I loaded each CSV into Blender on my model and adjusted the sound to the animation because most of the time the alignment was off. After that the data was almost ready to use, I now chopped the face and audio data into pieces. Because speech sounds do not occur in isolation and do not have a one-to-one mapping to characters, we can capture the effects of coarticulation (the articulation of one sound influencing the articulation of another). By training the network on overlapping windows of audio data that captures sound from before and after the current time index. So let&#39;s concatenate all data and slide a window over it to generate 6 frames (0.25 sec) long samples.
 
-&quot;Depending on the data sampling rate, we recommend 26 cepstral features for 16,000 Hz and 13 cepstral features for 8,000 hz.&quot;  - [https://zhuanlan.zhihu.com/p/28274740](https://zhuanlan.zhihu.com/p/28274740)
+&quot;Depending on the data sampling rate, we recommend 26 cepstral features for 16,000 Hz and 13 cepstral features for 8,000 hz.&quot; - [https://zhuanlan.zhihu.com/p/28274740](https://zhuanlan.zhihu.com/p/28274740)
 
 So for each audio peace we extract the 13 cepstral features (I manually lowered the sampling rate off the audio to 8000Hz). Then we select the 23 facial features and voilà. Here is a visual representation off the data (facial features on the top, audio features on the bottom):
 
