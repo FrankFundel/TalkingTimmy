@@ -6,6 +6,8 @@ using System;
 using System.IO;
 using System.Text;
 using static OpenWavParser;
+using UnityEngine.SceneManagement;
+using System.Globalization;
 
 public class animate : MonoBehaviour
 {
@@ -20,13 +22,35 @@ public class animate : MonoBehaviour
   static string face;
 
   private void Start() {
-    animation = GetComponent<Animation>();
-    audioSource = GetComponent<AudioSource>();
+    GameObject camera = GameObject.Find("Main Camera");
+    GameObject avatar1 = GameObject.Find("Avatar-2217084572");
+    GameObject avatar2 = GameObject.Find("avatar");
+    GameObject avatar;
+
+    if(StaticClass.Avatar == 1) {
+      avatar = GameObject.Find("Wolf3D.Avatar_Renderer_Head");
+      camera.transform.position = new Vector3(396, 236, -483.7f);
+      avatar2.SetActive(false);
+    } else {
+      avatar = avatar2;
+      camera.transform.position = new Vector3(749, 236, -483.7f);
+      avatar1.SetActive(false);
+    }
+
+    animation = avatar.GetComponent<Animation>();
+    audioSource = avatar.GetComponent<AudioSource>();
 
     string filePath = Application.persistentDataPath + "/output.wav";
     
-    Debug.Log("Start");
-    socket = IO.Socket("https://789b-134-60-112-69.ngrok.io"); //IO.Socket("http://localhost:8080");
+    string address = StaticClass.Address;
+    Debug.Log("Connecting to " + address);
+
+    try {
+      socket = IO.Socket("https://" + address + ".ngrok.io");
+    } catch(Exception e) {
+      SceneManager.LoadScene("MenuScene");
+      return;
+    }
 
     socket.On(QSocket.EVENT_CONNECT, () => {
       Debug.Log("Connected");
@@ -58,7 +82,7 @@ public class animate : MonoBehaviour
   }
 
   private void OnDestroy() {
-    socket.Disconnect();
+    if(socket != null) socket.Disconnect();
   }
 
   private void Update() {
@@ -84,13 +108,12 @@ public class animate : MonoBehaviour
     string[] blendshapes = {"jawOpen", "mouthClose", "mouthFunnel", "mouthPucker", "mouthRight", "mouthLeft", "mouthSmileRight", "mouthSmileLeft", "mouthFrownRight", "mouthFrownLeft", "mouthDimpleRight", "mouthDimpleLeft", "mouthStretchRight", "mouthStretchLeft", "mouthRollLower", "mouthRollUpper", "mouthShrugLower", "mouthShrugUpper", "mouthPressRight", "mouthPressLeft", "mouthLowerDownRight", "mouthLowerDownLeft", "mouthUpperUpRight"};
     string[] lines = data.Split("\n"[0]);
     float fps = 24.0f;
-    AnimationCurve anim;
     Keyframe[,] ks = new Keyframe[blendshapes.Length, lines.Length];
 
     for(int t = 0; t < lines.Length; t++) {
       string[] col = lines[t].Split(',');
       for(int i = 0; i < col.Length; i++) {
-        float val = float.Parse(col[i].Replace('.', ','));
+        float val = float.Parse(col[i], CultureInfo.InvariantCulture);
         ks[i, t] = new Keyframe((float)t / fps, val * 100);
       }
     }
