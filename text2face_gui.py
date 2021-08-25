@@ -1,4 +1,3 @@
-import sys
 import os
 import csv
 import json
@@ -15,6 +14,7 @@ import PySimpleGUI as sg
 
 from google.cloud import texttospeech
 import base64
+from pyngrok import ngrok
 
 sio = socketio.Server()
 app = socketio.WSGIApp(sio)
@@ -33,40 +33,6 @@ def chat(sid, data):
 @sio.event
 def disconnect(sid):
   print('disconnect', sid)
-
-def program():
-  global text
-  global file
-  
-  layout = [
-    [sg.Radio("Text", "Radio", True, key="-TEXT-RADIO-")],
-    [sg.In(key="-TEXT-")],
-    [sg.Radio("WAV file (16 Bit, 8000Hz)", "Radio", False, key="-FILE-RADIO-")],
-    [
-      sg.In(enable_events=True, key="-FILE-"),
-      sg.FileBrowse(),
-    ],
-    [
-      sg.Radio("AI", "Radio2", True, key="-AI-"),
-      sg.Radio("Rule based", "Radio2", False, key="-RULE-")
-    ],
-    [sg.Button("Talk")]
-  ]
-
-  window = sg.Window("Demo", layout)
-
-  while True:
-    event, values = window.read()
-    
-    if event == "Exit" or event == sg.WIN_CLOSED:
-      break
-    if event == "Talk":
-      if (values["-TEXT-RADIO-"]):
-        text = values["-TEXT-"]
-      elif(values["-FILE-RADIO-"]):
-        file = values["-FILE-"]
-
-  window.close()
 
 def wav2face(filepath):
   audio_fps = 8000
@@ -186,6 +152,41 @@ def worker():
       file = ""
     sio.sleep(1)
 
-threading.Thread(target=program).start()
-sio.start_background_task(worker)
-eventlet.wsgi.server(eventlet.listen(('localhost', 8080)), app)
+def server():
+  sio.start_background_task(worker) #sending thread
+  eventlet.wsgi.server(eventlet.listen(('localhost', 8080)), app)
+
+threading.Thread(target=server, daemon=True).start()
+tunnel = ngrok.connect(8080, bind_tls=True)
+print(tunnel.public_url)
+
+layout = [
+  [sg.Text("Connect to: " + tunnel.public_url[8:-9])],
+  [sg.Radio("Text", "Radio", True, key="-TEXT-RADIO-")],
+  [sg.In(key="-TEXT-")],
+  [sg.Radio("WAV file (16 Bit, 8000Hz)", "Radio", False, key="-FILE-RADIO-")],
+  [
+    sg.In(enable_events=True, key="-FILE-"),
+    sg.FileBrowse(),
+  ],
+  [
+    sg.Radio("AI", "Radio2", True, key="-AI-"),
+    sg.Radio("Rule based", "Radio2", False, key="-RULE-")
+  ],
+  [sg.Button("Talk")]
+]
+
+window = sg.Window("TalkingTimmy", layout)
+
+while True:
+  event, values = window.read()
+  
+  if event == "Exit" or event == sg.WIN_CLOSED:
+    break
+  if event == "Talk":
+    if (values["-TEXT-RADIO-"]):
+      text = values["-TEXT-"]
+    elif(values["-FILE-RADIO-"]):
+      file = values["-FILE-"]
+
+window.close()
