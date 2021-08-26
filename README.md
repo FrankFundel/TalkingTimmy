@@ -2,11 +2,12 @@
 
 ## HiWi Project – Frank Fundel
 
-![alt text](https://drive.google.com/file/d/1RjQ4IY6_1zs1MUwbuKh1fN_hwRFAAGcU/view?usp=sharing)
-![alt text](https://drive.google.com/file/d/12rRgTq4lhNboyIbUvmYb4VOKlPf2i0N3/view?usp=sharing)
-![alt text](https://drive.google.com/file/d/1vevmBRQxxkWq6ruT8GgoynNoxzmy5fmB/view?usp=sharing)
+![alt text](https://github.com/FrankFundel/TalkingTimmy/blob/main/unnamed.jpg?raw=true)
+![alt text](https://github.com/FrankFundel/TalkingTimmy/blob/main/unnamed%20(1).jpg?raw=true)
+![alt text](https://github.com/FrankFundel/TalkingTimmy/blob/main/Screenshot_1.png?raw=true)
 
-Google Play Store: 
+Google Play Store: [1.0.2](https://play.google.com/store/apps/details?id=com.Hadros.TalkingTimmy)
+
 [APK download 1.0.2](https://drive.google.com/file/d/16-DRuZtffvYEOVU06io-kpq6Rw21lNx1/view?usp=sharing)
 
 # How to use
