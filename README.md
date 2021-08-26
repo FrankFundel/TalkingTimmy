@@ -2,7 +2,20 @@
 
 ## HiWi Project – Frank Fundel
 
-## How to use
+![alt text](https://drive.google.com/file/d/1RjQ4IY6_1zs1MUwbuKh1fN_hwRFAAGcU/view?usp=sharing)
+![alt text](https://drive.google.com/file/d/12rRgTq4lhNboyIbUvmYb4VOKlPf2i0N3/view?usp=sharing)
+![alt text](https://drive.google.com/file/d/1vevmBRQxxkWq6ruT8GgoynNoxzmy5fmB/view?usp=sharing)
+
+Google Play Store: 
+[APK download 1.0.2](https://drive.google.com/file/d/16-DRuZtffvYEOVU06io-kpq6Rw21lNx1/view?usp=sharing)
+
+# How to use
+1. Start `python text2face_gui.py`
+2. Start Unity App
+3. Type in url and choose avatar
+4. Press start
+
+## How to use without gui on custom unity project
 
 1. Create new Unity project and add avatar of choice that has ARKit BlendShapes
 2. Make sure it has SkinnedMeshRenderer, Animation and Audio Source
@@ -11,7 +24,9 @@
 5. Create tunnel using `ngrok http 8080`
 6. Put tunnel url into `animate.cs`
 7. Build and run unity android app
-8. Type into command line and press enter
+8. Type into command line and press enter to talk
+
+The following as PDF: [Doc](https://drive.google.com/file/d/1Idtei_umpMKyik-906pI7h4622yhiQZe/view?usp=sharing)
 
 ## Content
 
