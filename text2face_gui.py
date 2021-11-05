@@ -15,10 +15,19 @@ import PySimpleGUI as sg
 from google.cloud import texttospeech
 import base64
 from pyngrok import ngrok
+import requests
+import aiml
 
 sio = socketio.Server()
 app = socketio.WSGIApp(sio)
+
+rasa = "http://localhost:5005/model/parse"
+aimlfile = ""
+ai = True
+rule = False
+
 text = ""
+chat = ""
 file = ""
 
 @sio.event
@@ -26,9 +35,9 @@ def connect(sid, environ):
   print('connect', sid)
 
 @sio.event
-def chat(sid, data):
-  print('chat: ' + data)
-  sio.emit('chat', data)
+def message(sid, data):
+  print('message: ' + data)
+  sio.emit('message', data)
 
 @sio.event
 def disconnect(sid):
@@ -125,12 +134,19 @@ def mat2string(mat):
   return text[:-1]
 
 def worker():
+  global ai
+  global rule
+  global rasa
+  global aimlfile
+
   global text
+  global chat
   global file
 
   while True:
     if (text):
-      sio.emit("chat", text)
+      print(text)
+      sio.emit("message", text)
 
       audio, audio_high = text2speech(text)
       face = wav2face(audio)
@@ -141,6 +157,24 @@ def worker():
       sio.emit('face', face_enc)
       sio.emit('audio', audio_enc)
       text = ""
+    elif (chat):
+      # Send to RASA
+      payload = {'text': chat}
+      headers = {'content-type': 'application/json'}
+      r = requests.post(rasa, json=payload, headers=headers).json()
+      print(r)
+
+      # Interpret RASA output with AIML
+      kernel = aiml.Kernel()
+      kernel.learn(aimlfile)
+      kernel.respond("load aiml b")
+      entities = ""
+      for entity in r["entities"]:
+        entities += " " + entity["value"]
+      text = kernel.respond(r["intent"]["name"] + entities)
+
+      # Use AIML output -> set text to output
+      chat = ""
     elif (file):
       face = wav2face(file)
       face_enc = mat2string(face)
@@ -169,6 +203,15 @@ layout = [
     sg.In(enable_events=True, key="-FILE-"),
     sg.FileBrowse(),
   ],
+  [sg.Radio("Chat", "Radio", False, key="-CHAT-RADIO-")],
+  [sg.In(key="-CHAT-")],
+  [sg.Text("Rasa address")],
+  [sg.In("http://localhost:5005/model/parse", key="-RASA-")],
+  [sg.Text("AIML file")],
+  [
+    sg.In(enable_events=True, key="-AIML-FILE-"),
+    sg.FileBrowse(),
+  ],
   [
     sg.Radio("AI", "Radio2", True, key="-AI-"),
     sg.Radio("Rule based", "Radio2", False, key="-RULE-")
@@ -184,8 +227,15 @@ while True:
   if event == "Exit" or event == sg.WIN_CLOSED:
     break
   if event == "Talk":
+    ai = values["-AI-"]
+    rule = values["-RULE-"]
+    rasa = values["-RASA-"]
+    aimlfile = values["-AIML-FILE-"]
+
     if (values["-TEXT-RADIO-"]):
       text = values["-TEXT-"]
+    elif (values["-CHAT-RADIO-"]):
+      chat = values["-CHAT-"]
     elif(values["-FILE-RADIO-"]):
       file = values["-FILE-"]
 
