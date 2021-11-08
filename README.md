@@ -7,6 +7,9 @@
 ![Python](https://github.com/FrankFundel/TalkingTimmy/blob/main/Doc/Python.png)
 
 [APK download 2.0.0](https://drive.google.com/file/d/16-DRuZtffvYEOVU06io-kpq6Rw21lNx1/view?usp=sharing)
++ Supports face tracking
++ Supports moving model using touchscreen
++ Supports moving model using remote joystick
 
 Google Play Store: [1.0.2](https://play.google.com/store/apps/details?id=com.Hadros.TalkingTimmy)
 
