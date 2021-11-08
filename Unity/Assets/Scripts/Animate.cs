@@ -8,9 +8,14 @@ using System.Text;
 using static OpenWavParser;
 using UnityEngine.SceneManagement;
 using System.Globalization;
+using UnityEngine.InputSystem;
 
-public class animate : MonoBehaviour
+public class Animate : MonoBehaviour
 {
+  private Controller controls;
+  private Vector2 rotate;
+  private Vector2 rotate2;
+
   private Animation animation;
   private AudioSource audioSource;
   private QSocket socket;
@@ -21,24 +26,27 @@ public class animate : MonoBehaviour
   static byte[] audio;
   static string face;
 
+  private GameObject avatar1;
+  private GameObject avatar2;
+  private GameObject avatar;
+  private GameObject avatarFace;
+
   private void Start() {
-    GameObject camera = GameObject.Find("Main Camera");
-    GameObject avatar1 = GameObject.Find("Avatar-2217084572");
-    GameObject avatar2 = GameObject.Find("avatar");
-    GameObject avatar;
+    avatar1 = GameObject.Find("Avatar1");
+    avatar2 = GameObject.Find("Avatar2");
 
     if(StaticClass.Avatar == 1) {
-      avatar = GameObject.Find("Wolf3D.Avatar_Renderer_Head");
-      camera.transform.position = new Vector3(396, 236, -483.7f);
+      avatar = avatar1;
+      avatarFace = GameObject.Find("Wolf3D.Avatar_Renderer_Head");
       avatar2.SetActive(false);
     } else {
       avatar = avatar2;
-      camera.transform.position = new Vector3(749, 236, -483.7f);
+      avatarFace = avatar2;
       avatar1.SetActive(false);
     }
 
-    animation = avatar.GetComponent<Animation>();
-    audioSource = avatar.GetComponent<AudioSource>();
+    animation = avatarFace.GetComponent<Animation>();
+    audioSource = avatarFace.GetComponent<AudioSource>();
 
     string filePath = Application.persistentDataPath + "/output.wav";
     
@@ -71,7 +79,7 @@ public class animate : MonoBehaviour
       byte[] decodedBytes = (byte[])(data);
       Debug.Log("Audio received: " + decodedBytes.Length.ToString());
 
-      if(OpenWavParser.IsCompatible(decodedBytes)) {
+      if(OpenWavParser.IsWAVFile(decodedBytes)) {
         Debug.Log("This is a valid PCM WAV file!!");
         audio = decodedBytes;
         audio_q = true;
@@ -85,7 +93,27 @@ public class animate : MonoBehaviour
     if(socket != null) socket.Disconnect();
   }
 
+  private void Awake() {
+    controls = new Controller();
+    controls.ControlMap.Rotate.performed += ctx => rotate = ctx.ReadValue<Vector2>();
+    controls.ControlMap.Rotate.canceled += ctx => rotate = Vector2.zero;
+    controls.ControlMap.Rotate2.performed += ctx => rotate2 = ctx.ReadValue<Vector2>();
+    controls.ControlMap.Rotate2.canceled += ctx => rotate2 = Vector2.zero;
+  }
+
+  private void OnEnable() {
+    controls.ControlMap.Enable();
+  }
+
   private void Update() {
+    Vector2 r = new Vector2(rotate.y, -rotate.x) * 5f * Time.deltaTime;
+    avatar.transform.Rotate(r, Space.World);
+
+    if(rotate.x == 0 && rotate.y == 0) {
+      Vector2 r2 = new Vector2(-rotate2.x, -rotate2.y) * 20f * Time.deltaTime;
+      avatar.transform.Rotate(r2, Space.World);
+    }
+
     if(audio_q && face_q) {
       audio_q = false;
       face_q = false;
