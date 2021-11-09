@@ -191,11 +191,11 @@ def server():
   eventlet.wsgi.server(eventlet.listen(('localhost', 8080)), app)
 
 threading.Thread(target=server, daemon=True).start()
-tunnel = ngrok.connect(8080, bind_tls=True)
+tunnel = ngrok.connect(8080, bind_tls=False) # bind_tls=True if you want/need to use https
 print(tunnel.public_url)
 
 layout = [
-  [sg.Text("Connect to: " + tunnel.public_url[8:-9])],
+  [sg.Text("Connect to: " + tunnel.public_url[7:-9])], # tunnel.public_url[8:-9] for https
   [sg.Radio("Text", "Radio", True, key="-TEXT-RADIO-")],
   [sg.In(key="-TEXT-")],
   [sg.Radio("WAV file (16 Bit, 8000Hz)", "Radio", False, key="-FILE-RADIO-")],
