@@ -212,10 +212,6 @@ layout = [
     sg.In(enable_events=True, key="-AIML-FILE-"),
     sg.FileBrowse(),
   ],
-  [
-    sg.Radio("AI", "Radio2", True, key="-AI-"),
-    sg.Radio("Rule based", "Radio2", False, key="-RULE-")
-  ],
   [sg.Button("Talk")]
 ]
 

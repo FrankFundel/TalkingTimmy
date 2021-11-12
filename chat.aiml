@@ -4,14 +4,7 @@
     <category>
         <pattern>GREET</pattern>
         <template>
-            Well, hello!
-        </template>
-    </category>
-
-    <category>
-        <pattern>GREET *</pattern>
-        <template>
-            Hello, <star/>!
+            Hallo!
         </template>
     </category>
 </aiml>
