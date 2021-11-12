@@ -10,6 +10,13 @@
 + Supports face tracking
 + Supports moving model using touchscreen
 + Supports moving model using remote joystick
++ SSL transmission
+
+[APK download 2.0.0 for Tablet](https://drive.google.com/file/d/1BIILN9RyShudK72pWfC0JDujjKfVxrF9/view?usp=sharing)
++ Without face tracking
++ Supports moving model using touchscreen
++ Supports moving model using remote joystick
++ Without SSL transmission
 
 Google Play Store: [1.0.2](https://play.google.com/store/apps/details?id=com.Hadros.TalkingTimmy)
 
